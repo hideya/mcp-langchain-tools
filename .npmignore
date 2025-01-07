@@ -1,4 +1,7 @@
 /node_modules
 /src
+/tests
+/coverage
 tsconfig.json
 eslint.config.js
+jest.config.js

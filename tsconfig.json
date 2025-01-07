@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "types": [
+      "node",
+      "jest",
+    ],
     "target": "ES2022",
     "module": "Node16",
     "moduleResolution": "Node16",
@@ -14,8 +18,5 @@
   },
   "include": [
     "src/**/*"
-  ],
-  "exclude": [
-    "node_modules"
   ]
 }
