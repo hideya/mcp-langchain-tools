@@ -25,7 +25,6 @@ interface LogOptions {
 
 interface MCPError extends Error {
   serverName: string;
-  code: string;
   details?: unknown;
 }
 
@@ -36,7 +35,6 @@ export interface MCPServerCleanupFunction {
 class MCPInitializationError extends Error implements MCPError {
   constructor(
     public serverName: string,
-    public code: string,
     message: string,
     public details?: unknown
   ) {
@@ -78,7 +76,8 @@ export async function convertMCPServersToLangChainTools(
       allTools.push(...tools);
       cleanupCallbacks.push(cleanup);
     } else {
-      logger.error(`MCP server "${serverNames[index]}": failed to initialize: ${result.reason}`);
+      logger.error(`MCP server "${serverNames[index]}": failed to initialize: ${result.reason.details}`);
+      throw result.reason;
     }
   });
 
@@ -88,11 +87,9 @@ export async function convertMCPServersToLangChainTools(
 
     // Log any cleanup failures
     const failures = results.filter(result => result.status === 'rejected');
-    if (failures.length > 0) {
-      failures.forEach((failure, index) => {
-        logger.error(`MCP server "${serverNames[index]}": failed to close: ${failure.reason}`);
-      });
-    }
+    failures.forEach((failure, index) => {
+      logger.error(`MCP server "${serverNames[index]}": failed to close: ${failure.reason}`);
+    });
   }
 
   logger.info(`MCP servers initialized and found ${allTools.length} tool(s) in total:`);
@@ -149,10 +146,6 @@ async function convertMCPServerToLangChainTools(
         func: async (input) => {
           logger.info(`MCP Tool "${tool.name}" received input:`, input);
 
-          if (Object.keys(input).length === 0) {
-            return 'No input provided';
-          }
-
           // Execute tool call
           const result = await client?.request(
             {
@@ -193,10 +186,16 @@ async function convertMCPServerToLangChainTools(
     return { tools, cleanup };
   } catch (error: unknown) {
     // Proper cleanup in case of initialization error
-    if (transport) await transport.close();
+    if (transport) {
+      try {
+        await transport.close();
+      } catch (cleanupError) {
+        // Log cleanup error but don't let it override the original error
+        logger.error(`Failed to cleanup during initialization error: ${cleanupError}`);
+      }
+    }
     throw new MCPInitializationError(
       serverName,
-      'INIT_FAILED',
       `Failed to initialize MCP server: ${error instanceof Error ? error.message : String(error)}`,
       error
     );

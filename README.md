@@ -1,4 +1,4 @@
-# MCP Server To LangChain Tools Conversion Utility [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/hideya/react/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/@h1deya/mcp-langchain-tools.svg)](https://www.npmjs.com/package/@h1deya/mcp-langchain-tools)
+# MCP Server To LangChain Tools Conversion Utility [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/hideya/mcp-langchain-tools/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/@h1deya/mcp-langchain-tools.svg)](https://www.npmjs.com/package/@h1deya/mcp-langchain-tools)
 
 This package is intended to simplify the use of MCP server tools within LangChain.
 

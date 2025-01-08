@@ -1,6 +1,6 @@
 {
   "name": "@h1deya/mcp-langchain-tools",
-  "version": "0.0.9",
+  "version": "0.0.19",
   "description": "A utility that wraps MCP servers into LangChain tools",
   "license": "MIT",
   "keywords": [
@@ -8,24 +8,33 @@
     "mcp",
     "mcp-client",
     "langchain",
-    "tool-calling"
+    "tool-calling",
+    "typescript"
   ],
   "author": "hideya kawahara",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hideya/mcp-langchain-tools.git"
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hideya/mcp-langchain-tools.git"
+  },
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
     "watch": "tsc --watch",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "clean": "rm -rf dist coverage"
   },
   "dependencies": {
     "@langchain/core": "^0.3.27",
@@ -38,8 +47,10 @@
     "@types/node": "^22.10.5",
     "@typescript-eslint/eslint-plugin": "^8.19.0",
     "@typescript-eslint/parser": "^8.19.0",
+    "@vitest/coverage-v8": "^2.1.8",
     "eslint": "^9.17.0",
     "typescript": "^5.7.2",
-    "typescript-eslint": "^8.19.0"
+    "typescript-eslint": "^8.19.0",
+    "vitest": "^2.1.8"
   }
 }
