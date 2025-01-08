@@ -1,5 +1,5 @@
 {
-  "name": "@h1deya/mcp-langchain-tools",
+  "name": "@hideya/mcp-langchain-tools",
   "version": "0.0.19",
   "description": "A utility that wraps MCP servers into LangChain tools",
   "license": "MIT",
@@ -25,6 +25,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hideya/mcp-langchain-tools.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
     "build": "tsc",
