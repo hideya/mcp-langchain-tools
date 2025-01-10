@@ -1,13 +1,12 @@
-// Copyright (C) 2024 Hideya Kawahara
-// SPDX-License-Identifier: MIT
+// Simple logger
 
 type LogLevelString = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 
 enum LogLevel {
   TRACE = 0,
   DEBUG = 1,
-  INFO  = 2,
-  WARN  = 3,
+  INFO = 2,
+  WARN = 3,
   ERROR = 4,
   FATAL = 5
 }
@@ -15,8 +14,8 @@ enum LogLevel {
 const LOG_COLORS = {
   [LogLevel.TRACE]: '\x1b[90m',   // Gray
   [LogLevel.DEBUG]: '\x1b[90m',   // Gray
-  [LogLevel.INFO]:  '\x1b[90m',   // Gray
-  [LogLevel.WARN]:  '\x1b[1;93m', // Bold bright yellow
+  [LogLevel.INFO]: '\x1b[90m',    // Gray
+  [LogLevel.WARN]: '\x1b[1;93m',  // Bold bright yellow
   [LogLevel.ERROR]: '\x1b[1;91m', // Bold bright red
   [LogLevel.FATAL]: '\x1b[1;101m',// Red background, Bold text
 } as const;
@@ -24,8 +23,8 @@ const LOG_COLORS = {
 const LOG_LEVEL_MAP: Record<LogLevelString, LogLevel> = {
   trace: LogLevel.TRACE,
   debug: LogLevel.DEBUG,
-  info:  LogLevel.INFO,
-  warn:  LogLevel.WARN,
+  info: LogLevel.INFO,
+  warn: LogLevel.WARN,
   error: LogLevel.ERROR,
   fatal: LogLevel.FATAL
 } as const;
