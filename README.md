@@ -16,10 +16,10 @@ npm i @h1deya/langchain-mcp-tools
 ## Quick Start
 
 `convertMcpToLangchainTools()` utility function accepts MCP server configuration
-in pretty much the same format as a JS Object interpretation of the JSON format used by
-[Claude for Desktop](https://modelcontextprotocol.io/quickstart/user)
-(it just needs the contents of the `mcpServers` property).
-e.g.:
+that follows the same structure as
+[Claude for Desktop](https://modelcontextprotocol.io/quickstart/user),
+but only the contents of the `mcpServers` property,
+and is expressed as a JS Object, e.g.:
 
 ```ts
 const mcpServers: McpServersConfig = {
@@ -42,7 +42,7 @@ const mcpServers: McpServersConfig = {
 const { tools, cleanup } = await convertMcpToLangchainTools(mcpServers);
 ```
 
-The utility function initializes all the MCP server connections concurrently,
+The utility function initializes all specified MCP servers in parallel,
 and returns LangChain Tools (`tools: DynamicStructuredTool[]`)
 by gathering all the available MCP server tools,
 and by wrapping them into [LangChain Tools](https://js.langchain.com/docs/how_to/tool_calling/).
@@ -52,6 +52,7 @@ which is used to close all the connections to the MCP servers when finished.
 The returned tools can be used with LangChain, e.g.:
 
 ```ts
+// import { ChatAnthropic } from '@langchain/anthropic';
 const llm = new ChatAnthropic({ model: 'claude-3-5-haiku-latest' });
 
 // import { createReactAgent } from '@langchain/langgraph/prebuilt';
