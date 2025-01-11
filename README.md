@@ -1,11 +1,13 @@
 # MCP To LangChain Tools Conversion Utility [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/hideya/langchain-mcp-tools-ts/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/@h1deya/langchain-mcp-tools.svg)](https://www.npmjs.com/package/@h1deya/langchain-mcp-tools)
 
-This package is intended to simplify the use of MCP server tools within LangChain.
+This package is intended to simplify the use of
+[Model Context Protocol (MCP)](https://modelcontextprotocol.io/)
+server tools with LangChain.
 
 It contains a utility function `convertMcpToLangchainTools()`
 that initializes specified MCP servers,
 and returns [LangChain Tools](https://js.langchain.com/docs/how_to/tool_calling/)
-that wrap all the tools found in given MCP servers.
+that wrap all the tools found in the MCP servers.
 
 ## Installation
 
