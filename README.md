@@ -1,11 +1,11 @@
-# MCP Server To LangChain Tools Conversion Utility [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/hideya/langchain-mcp-tools-ts/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/@h1deya/langchain-mcp-tools.svg)](https://www.npmjs.com/package/@h1deya/langchain-mcp-tools)
+# MCP To LangChain Tools Conversion Utility [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/hideya/langchain-mcp-tools-ts/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/@h1deya/langchain-mcp-tools.svg)](https://www.npmjs.com/package/@h1deya/langchain-mcp-tools)
 
 This package is intended to simplify the use of MCP server tools within LangChain.
 
-It contains a utility function `convertMCPServersToLangChainTools()`
+It contains a utility function `convertMcpToLangchainTools()`
 that initializes specified MCP servers,
 and returns [LangChain Tools](https://js.langchain.com/docs/how_to/tool_calling/)
-that wrap all the available MCP server tools.
+that wrap all the tools found in given MCP servers.
 
 ## Installation
 
@@ -15,14 +15,14 @@ npm i @h1deya/langchain-mcp-tools
 
 ## Quick Start
 
-`convertMCPServersToLangChainTools()` utility function accepts MCP server configuration
+`convertMcpToLangchainTools()` utility function accepts MCP server configuration
 in pretty much the same format as a JS Object interpretation of the JSON format used by
 [Claude for Desktop](https://modelcontextprotocol.io/quickstart/user)
 (it just needs the contents of the `mcpServers` property).
 e.g.:
 
 ```ts
-const mcpServers: MCPServersConfig = {
+const mcpServers: McpServersConfig = {
   filesystem: {
     command: 'npx',
     args: [
@@ -39,7 +39,7 @@ const mcpServers: MCPServersConfig = {
   }
 };
 
-const { tools, cleanup } = await convertMCPServersToLangChainTools(mcpServers);
+const { tools, cleanup } = await convertMcpToLangchainTools(mcpServers);
 ```
 
 The utility function initializes all the MCP server connections concurrently,

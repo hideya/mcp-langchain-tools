@@ -7,14 +7,14 @@ import { z } from 'zod';
 import { Logger } from './logger.js';
 
 // Base configuration types for MCP servers
-interface MCPServerConfig {
+interface McpServerConfig {
   command: string;
   args: readonly string[];
   env?: Readonly<Record<string, string>>;
 }
 
-export interface MCPServersConfig {
-  [key: string]: MCPServerConfig;
+export interface McpServersConfig {
+  [key: string]: McpServerConfig;
 }
 
 interface LogOptions {
@@ -26,7 +26,7 @@ interface MCPError extends Error {
   details?: unknown;
 }
 
-export interface MCPServerCleanupFunction {
+export interface McpServerCleanupFunction {
   (): Promise<void>;
 }
 
@@ -43,19 +43,19 @@ class MCPInitializationError extends Error implements MCPError {
 }
 
 // Primary function to convert multiple MCP servers to LangChain tools
-export async function convertMCPServersToLangChainTools(
-  configs: MCPServersConfig,
+export async function convertMcpToLangchainTools(
+  configs: McpServersConfig,
   options?: LogOptions
 ): Promise<{
   tools: DynamicStructuredTool[];
-  cleanup: MCPServerCleanupFunction;
+  cleanup: McpServerCleanupFunction;
 }> {
   const allTools: DynamicStructuredTool[] = [];
-  const cleanupCallbacks: MCPServerCleanupFunction[] = [];
+  const cleanupCallbacks: McpServerCleanupFunction[] = [];
   const logger = new Logger({ level: options?.logLevel || 'info' });
 
   const serverInitPromises = Object.entries(configs).map(async ([name, config]) => {
-    const result = await convertMCPServerToLangChainTools(name, config, logger);
+    const result = await convertSingleMcpToLangchainTools(name, config, logger);
     return { name, result };
   });
 
@@ -97,13 +97,13 @@ export async function convertMCPServersToLangChainTools(
 }
 
 // Convert a single MCP server into LangChain tools
-async function convertMCPServerToLangChainTools(
+async function convertSingleMcpToLangchainTools(
   serverName: string,
-  config: MCPServerConfig,
+  config: McpServerConfig,
   logger: Logger
 ): Promise<{
   tools: DynamicStructuredTool[];
-  cleanup: MCPServerCleanupFunction;
+  cleanup: McpServerCleanupFunction;
 }> {
   let transport: StdioClientTransport | null = null;
   let client: Client | null = null;

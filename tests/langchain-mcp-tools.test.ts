@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { convertMCPServersToLangChainTools } from '../src/langchain-mcp-tools.js';
+import { convertMcpToLangchainTools } from '../src/langchain-mcp-tools.js';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 
@@ -26,7 +26,7 @@ vi.mock('@modelcontextprotocol/sdk/client/stdio.js', () => ({
   }) as unknown as typeof StdioClientTransport,
 }));
 
-describe('convertMCPServersToLangChainTools', () => {
+describe('convertMcpToLangchainTools', () => {
   let mockConnect;
   let mockRequest;
   let mockTransportClose;
@@ -57,7 +57,7 @@ describe('convertMCPServersToLangChainTools', () => {
   });
 
   it('should handle empty config', async () => {
-    const { tools, cleanup } = await convertMCPServersToLangChainTools({});
+    const { tools, cleanup } = await convertMcpToLangchainTools({});
     expect(tools).toHaveLength(0);
     await cleanup();
   });
@@ -70,7 +70,7 @@ describe('convertMCPServersToLangChainTools', () => {
       },
     };
 
-    await expect(convertMCPServersToLangChainTools(invalidConfig))
+    await expect(convertMcpToLangchainTools(invalidConfig))
       .rejects
       .toThrow('Failed to initialize MCP server');
   });
@@ -105,7 +105,7 @@ describe('convertMCPServersToLangChainTools', () => {
       }
     };
 
-    const { tools, cleanup } = await convertMCPServersToLangChainTools(config);
+    const { tools, cleanup } = await convertMcpToLangchainTools(config);
 
     // Verify the conversion results
     expect(tools).toHaveLength(1);
@@ -139,7 +139,7 @@ describe('convertMCPServersToLangChainTools', () => {
       server2: { command: 'cmd2', args: [] }
     };
 
-    const { tools, cleanup } = await convertMCPServersToLangChainTools(config);
+    const { tools, cleanup } = await convertMcpToLangchainTools(config);
     expect(tools).toHaveLength(4); // 2 tools × 2 servers
     await cleanup();
   });
@@ -151,7 +151,7 @@ describe('convertMCPServersToLangChainTools', () => {
       failingServer: { command: 'fail', args: [] },
     };
 
-    await expect(convertMCPServersToLangChainTools(config))
+    await expect(convertMcpToLangchainTools(config))
       .rejects
       .toThrow('Failed to initialize MCP server: Connection failed');
   });
@@ -168,7 +168,7 @@ describe('convertMCPServersToLangChainTools', () => {
       emptyServer: { command: 'empty', args: [] }
     };
 
-    const { tools, cleanup } = await convertMCPServersToLangChainTools(config);
+    const { tools, cleanup } = await convertMcpToLangchainTools(config);
     expect(tools).toHaveLength(0);
     await cleanup();
   });
@@ -187,7 +187,7 @@ describe('convertMCPServersToLangChainTools', () => {
       errorServer: { command: 'error', args: [] }
     };
 
-    const { tools } = await convertMCPServersToLangChainTools(config);
+    const { tools } = await convertMcpToLangchainTools(config);
     await expect(tools[0].func({})).rejects.toThrow('Tool execution failed');
   });
 
@@ -211,7 +211,7 @@ describe('convertMCPServersToLangChainTools', () => {
       testServer: { command: 'test', args: [] }
     };
 
-    const { tools } = await convertMCPServersToLangChainTools(config);
+    const { tools } = await convertMcpToLangchainTools(config);
     const result = await tools[0].func({ test: true });
     expect(result).toBe('text content\n\nmore text');
   });
@@ -234,7 +234,7 @@ describe('convertMCPServersToLangChainTools', () => {
       server2: { command: 'cmd2', args: [] }
     };
 
-    const { cleanup } = await convertMCPServersToLangChainTools(config);
+    const { cleanup } = await convertMcpToLangchainTools(config);
     await cleanup(); // Should handle the mixed success/failure case
   });
 
@@ -253,9 +253,9 @@ describe('convertMCPServersToLangChainTools', () => {
     };
 
     // Test with debug level
-    await convertMCPServersToLangChainTools(config, { logLevel: 'debug' });
+    await convertMcpToLangchainTools(config, { logLevel: 'debug' });
     // Test with trace level
-    await convertMCPServersToLangChainTools(config, { logLevel: 'trace' });
+    await convertMcpToLangchainTools(config, { logLevel: 'trace' });
   });
 
   it('should handle transport closure during error', async () => {
@@ -270,7 +270,7 @@ describe('convertMCPServersToLangChainTools', () => {
       errorServer: { command: 'error', args: [] }
     };
 
-    await expect(convertMCPServersToLangChainTools(config))
+    await expect(convertMcpToLangchainTools(config))
       .rejects
       .toThrow('Failed to initialize MCP server: Connection error');
   });
@@ -293,7 +293,7 @@ describe('convertMCPServersToLangChainTools', () => {
       testServer: { command: 'test', args: [] }
     };
 
-    const { tools } = await convertMCPServersToLangChainTools(config);
+    const { tools } = await convertMcpToLangchainTools(config);
     expect(tools[0].description).toBe('');
   });
 
@@ -318,7 +318,7 @@ describe('convertMCPServersToLangChainTools', () => {
       }
     };
 
-    const { tools } = await convertMCPServersToLangChainTools(config);
+    const { tools } = await convertMcpToLangchainTools(config);
     expect(MockedStdioClientTransport).toHaveBeenCalledWith(
       expect.objectContaining({
         env: expect.objectContaining({
@@ -338,7 +338,7 @@ describe('convertMCPServersToLangChainTools', () => {
     };
 
     // We still expect the original error to be thrown
-    await expect(convertMCPServersToLangChainTools(config))
+    await expect(convertMcpToLangchainTools(config))
       .rejects
       .toThrow('Failed to initialize MCP server: Connection error');
   });
