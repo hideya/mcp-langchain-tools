@@ -17,7 +17,7 @@ npm i @h1deya/langchain-mcp-tools
 
 ## Quick Start
 
-`convertMcpToLangchainTools()` utility function accepts MCP server configuration
+`convertMcpToLangchainTools()` utility function accepts MCP server configurations
 that follows the same structure as
 [Claude for Desktop](https://modelcontextprotocol.io/quickstart/user),
 but only the contents of the `mcpServers` property,
@@ -46,10 +46,10 @@ const { tools, cleanup } = await convertMcpToLangchainTools(mcpServers);
 
 The utility function initializes all specified MCP servers in parallel,
 and returns LangChain Tools (`tools: DynamicStructuredTool[]`)
-by gathering all the available MCP server tools,
+by gathering all available MCP server tools,
 and by wrapping them into [LangChain Tools](https://js.langchain.com/docs/how_to/tool_calling/).
 It also returns `cleanup` callback function
-which is used to close all the connections to the MCP servers when finished.
+which is used to close all connections to the MCP servers when finished.
 
 The returned tools can be used with LangChain, e.g.:
 

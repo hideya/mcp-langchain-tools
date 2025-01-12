@@ -114,7 +114,7 @@ describe('convertMcpToLangchainTools', () => {
 
     // Test tool execution
     const result = await tools[0].func({ input: 'test' });
-    expect(result).toBe('test result');
+    expect(result).toBe('[{"type":"text","text":"test result"}]');
 
     // Verify cleanup
     await cleanup();
@@ -213,7 +213,11 @@ describe('convertMcpToLangchainTools', () => {
 
     const { tools } = await convertMcpToLangchainTools(config);
     const result = await tools[0].func({ test: true });
-    expect(result).toBe('text content\n\nmore text');
+    expect(result).toBe(
+      '[{"type":"text","text":"text content"},' +
+      '{"type":"other","text":"should be filtered"},' +
+      '{"type":"text","text":"more text"}]'
+    );
   });
 
   it('should handle cleanup failures', async () => {
