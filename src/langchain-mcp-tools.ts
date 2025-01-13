@@ -21,37 +21,55 @@ interface LogOptions {
   logLevel?: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace';
 }
 
-interface MCPError extends Error {
+interface McpError extends Error {
   serverName: string;
   details?: unknown;
 }
 
-export interface McpServerCleanupFunction {
+export interface McpServerCleanupFn {
   (): Promise<void>;
 }
 
 // Custom error type for MCP server initialization failures
-class MCPInitializationError extends Error implements MCPError {
+class McpInitializationError extends Error implements McpError {
   constructor(
     public serverName: string,
     message: string,
     public details?: unknown
   ) {
     super(message);
-    this.name = 'MCPInitializationError';
+    this.name = 'McpInitializationError';
   }
 }
 
-// Primary function to convert multiple MCP servers to LangChain tools
+/**
+ * Initializes multiple MCP (Model Context Protocol) servers and converts them into LangChain tools.
+ * This function concurrently sets up all specified servers and aggregates their tools.
+ *
+ * @param configs - A mapping of server names to their respective configurations
+ * @param options - Optional logging configuration
+ *
+ * @returns A promise that resolves to:
+ *          - tools: Array of DynamicStructuredTool instances ready for use with LangChain
+ *          - cleanup: Function to properly terminate all server connections
+ *
+ * @throws McpInitializationError if any server fails to initialize
+ *
+ * @example
+ * const { tools, cleanup } = await convertMcpToLangchainTools({
+ *   filesystem: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-filesystem', '.'] },
+ *   fetch: { command: 'uvx', args: ['mcp-server-fetch'] }
+ * });
+ */
 export async function convertMcpToLangchainTools(
   configs: McpServersConfig,
   options?: LogOptions
 ): Promise<{
   tools: DynamicStructuredTool[];
-  cleanup: McpServerCleanupFunction;
+  cleanup: McpServerCleanupFn;
 }> {
   const allTools: DynamicStructuredTool[] = [];
-  const cleanupCallbacks: McpServerCleanupFunction[] = [];
+  const cleanupCallbacks: McpServerCleanupFn[] = [];
   const logger = new Logger({ level: options?.logLevel || 'info' });
 
   const serverInitPromises = Object.entries(configs).map(async ([name, config]) => {
@@ -96,14 +114,31 @@ export async function convertMcpToLangchainTools(
   return { tools: allTools, cleanup };
 }
 
-// Convert a single MCP server into LangChain tools
+/**
+ * Initializes a single MCP server and converts its capabilities into LangChain tools.
+ * Sets up a connection to the server, retrieves available tools, and creates corresponding
+ * LangChain tool instances.
+ *
+ * @param serverName - Unique identifier for the server instance
+ * @param config - Server configuration including command, arguments, and environment variables
+ * @param logger - Logger instance for recording operation details
+ *
+ * @returns A promise that resolves to:
+ *          - tools: Array of DynamicStructuredTool instances from this server
+ *          - cleanup: Function to properly terminate the server connection
+ *
+ * @throws McpInitializationError if server initialization fails
+ *         (includes connection errors, tool listing failures)
+ *
+ * @internal This function is meant to be called by convertMcpToLangchainTools
+ */
 async function convertSingleMcpToLangchainTools(
   serverName: string,
   config: McpServerConfig,
   logger: Logger
 ): Promise<{
   tools: DynamicStructuredTool[];
-  cleanup: McpServerCleanupFunction;
+  cleanup: McpServerCleanupFn;
 }> {
   let transport: StdioClientTransport | null = null;
   let client: Client | null = null;
@@ -171,6 +206,12 @@ async function convertSingleMcpToLangchainTools(
           logger.info(`MCP tool "${serverName}"/"${tool.name}" received result (length: ${roughLength})`);
           logger.debug('result:', result?.content);
           return resultStringfied;
+
+          // const filteredResult = result?.content
+          //   .filter(content => content.type === 'text')
+          //   .map(content => content.text)
+          //   .join('\n\n');
+          // return filteredResult;
         },
       })
     ));
@@ -196,7 +237,7 @@ async function convertSingleMcpToLangchainTools(
         logger.error(`Failed to cleanup during initialization error: ${cleanupError}`);
       }
     }
-    throw new MCPInitializationError(
+    throw new McpInitializationError(
       serverName,
       `Failed to initialize MCP server: ${error instanceof Error ? error.message : String(error)}`,
       error

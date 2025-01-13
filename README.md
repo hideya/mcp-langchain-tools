@@ -4,10 +4,10 @@ This package is intended to simplify the use of
 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/)
 server tools with LangChain.
 
-It contains a utility function `convertMcpToLangchainTools()`
-that initializes specified MCP servers,
-and returns [LangChain Tools](https://js.langchain.com/docs/how_to/tool_calling/)
-that wrap all the tools found in the MCP servers.
+It contains a utility function `convertMcpToLangchainTools()`.  
+This function handles parallel initialization of specified multiple MCP servers
+and converts their available tools into a list of
+[LangChain-compatible tools](https://js.langchain.com/docs/how_to/tool_calling/).
 
 ## Installation
 
@@ -18,7 +18,7 @@ npm i @h1deya/langchain-mcp-tools
 ## Quick Start
 
 `convertMcpToLangchainTools()` utility function accepts MCP server configurations
-that follows the same structure as
+that follow the same structure as
 [Claude for Desktop](https://modelcontextprotocol.io/quickstart/user),
 but only the contents of the `mcpServers` property,
 and is expressed as a JS Object, e.g.:
@@ -49,7 +49,7 @@ and returns LangChain Tools (`tools: DynamicStructuredTool[]`)
 by gathering all available MCP server tools,
 and by wrapping them into [LangChain Tools](https://js.langchain.com/docs/how_to/tool_calling/).
 It also returns `cleanup` callback function
-which is used to close all connections to the MCP servers when finished.
+to be invoked to close all MCP server sessions when finished.
 
 The returned tools can be used with LangChain, e.g.:
 
