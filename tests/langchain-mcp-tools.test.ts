@@ -10,7 +10,7 @@ type MockedClass<T extends abstract new (...args: any) => any> = {
 
 const MockedClient = Client as unknown as MockedClass<typeof Client>;
 const MockedStdioClientTransport = StdioClientTransport as unknown as MockedClass<typeof StdioClientTransport>;
-import { DynamicStructuredTool } from '@langchain/core/tools';
+import { DynamicStructuredTool, StructuredTool } from '@langchain/core/tools';
 
 // Mock external dependencies
 // Mock modules
@@ -109,11 +109,11 @@ describe('convertMcpToLangchainTools', () => {
 
     // Verify the conversion results
     expect(tools).toHaveLength(1);
-    expect(tools[0]).toBeInstanceOf(DynamicStructuredTool);
+    expect(tools[0]).toBeInstanceOf(StructuredTool);
     expect(tools[0].name).toBe('test-tool');
 
     // Test tool execution
-    const result = await tools[0].func({ input: 'test' });
+    const result = await (tools[0] as DynamicStructuredTool).func({ input: 'test' });
     expect(result).toBe('[{"type":"text","text":"test result"}]');
 
     // Verify cleanup
@@ -188,7 +188,7 @@ describe('convertMcpToLangchainTools', () => {
     };
 
     const { tools } = await convertMcpToLangchainTools(config);
-    await expect(tools[0].func({})).rejects.toThrow('Tool execution failed');
+    await expect((tools[0] as DynamicStructuredTool).func({})).rejects.toThrow('Tool execution failed');
   });
 
   it('should handle different content types in tool results', async () => {
@@ -212,7 +212,7 @@ describe('convertMcpToLangchainTools', () => {
     };
 
     const { tools } = await convertMcpToLangchainTools(config);
-    const result = await tools[0].func({ test: true });
+    const result = await (tools[0] as DynamicStructuredTool).func({ test: true });
     expect(result).toBe(
       '[{"type":"text","text":"text content"},' +
       '{"type":"other","text":"should be filtered"},' +

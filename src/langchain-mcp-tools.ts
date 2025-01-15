@@ -1,7 +1,7 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { CallToolResultSchema, ListToolsResultSchema } from '@modelcontextprotocol/sdk/types.js';
-import { DynamicStructuredTool } from '@langchain/core/tools';
+import { DynamicStructuredTool, StructuredTool } from '@langchain/core/tools';
 import { jsonSchemaToZod, JsonSchema } from '@n8n/json-schema-to-zod';
 import { z } from 'zod';
 import { Logger } from './logger.js';
@@ -50,7 +50,7 @@ class McpInitializationError extends Error implements McpError {
  * @param options - Optional logging configuration
  *
  * @returns A promise that resolves to:
- *          - tools: Array of DynamicStructuredTool instances ready for use with LangChain
+ *          - tools: Array of StructuredTool instances ready for use with LangChain
  *          - cleanup: Function to properly terminate all server connections
  *
  * @throws McpInitializationError if any server fails to initialize
@@ -65,10 +65,10 @@ export async function convertMcpToLangchainTools(
   configs: McpServersConfig,
   options?: LogOptions
 ): Promise<{
-  tools: DynamicStructuredTool[];
+  tools: StructuredTool[];
   cleanup: McpServerCleanupFn;
 }> {
-  const allTools: DynamicStructuredTool[] = [];
+  const allTools: StructuredTool[] = [];
   const cleanupCallbacks: McpServerCleanupFn[] = [];
   const logger = new Logger({ level: options?.logLevel || 'info' });
 
@@ -124,7 +124,7 @@ export async function convertMcpToLangchainTools(
  * @param logger - Logger instance for recording operation details
  *
  * @returns A promise that resolves to:
- *          - tools: Array of DynamicStructuredTool instances from this server
+ *          - tools: Array of StructuredTool instances from this server
  *          - cleanup: Function to properly terminate the server connection
  *
  * @throws McpInitializationError if server initialization fails
@@ -137,7 +137,7 @@ async function convertSingleMcpToLangchainTools(
   config: McpServerConfig,
   logger: Logger
 ): Promise<{
-  tools: DynamicStructuredTool[];
+  tools: StructuredTool[];
   cleanup: McpServerCleanupFn;
 }> {
   let transport: StdioClientTransport | null = null;
