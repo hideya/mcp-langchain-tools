@@ -5,7 +5,7 @@ This package is intended to simplify the use of
 server tools with LangChain / TypeScript.
 
 It contains a utility function `convertMcpToLangchainTools()`.  
-This function handles parallel initialization of specified multiple MCP servers
+This async function handles parallel initialization of specified multiple MCP servers
 and converts their available tools into an array of LangChain-compatible tools.
 
 A python equivalent of this utility library is available
