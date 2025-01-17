@@ -5,9 +5,8 @@ This package is intended to simplify the use of
 server tools with LangChain / TypeScript.
 
 It contains a utility function `convertMcpToLangchainTools()`.  
-This function handles parallel initialization of specified multiple MCP servers
-and converts their available tools into an array of
-[LangChain-compatible tools](https://js.langchain.com/docs/how_to/tool_calling/).
+This async function handles parallel initialization of specified multiple MCP servers
+and converts their available tools into an array of LangChain-compatible tools.
 
 A python equivalent of this utility library is available
 [here](https://pypi.org/project/langchain-mcp-tools)
@@ -46,8 +45,8 @@ const { tools, cleanup } = await convertMcpToLangchainTools(mcpServers);
 ```
 
 This utility function initializes all specified MCP servers in parallel,
-and returns [LangChain Tools](https://api.js.langchain.com/modules/_langchain_core.tools.html)
-(`tools: StructuredTool[]`)
+and returns LangChain Tools
+([`tools: StructuredTool[]`](https://api.js.langchain.com/classes/_langchain_core.tools.StructuredTool.html))
 by gathering available MCP tools from the servers,
 and by wrapping them into LangChain tools.
 It also returns an async callback function (`cleanup: McpServerCleanupFn`)
