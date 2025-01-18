@@ -4,6 +4,25 @@ This package is intended to simplify the use of
 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/)
 server tools with LangChain / TypeScript.
 
+[Model Context Protocol (MCP)](https://modelcontextprotocol.io/),
+introduced by
+[Anthropic](https://www.anthropic.com/news/model-context-protocol),
+extends the capabilities of LLMs by enabling interaction with external tools and resources,
+such as web search and database access.
+Thanks to its open-source nature, MCP has gained significant traction in the developer community,
+with over 400 MCP servers already developed and shared:
+
+- [Smithery: MCP Server Registry](https://smithery.ai/)
+- [Glama’s list of Open-Source MCP servers](https://glama.ai/mcp/servers)
+
+In the MCP framework, external features are encapsulated in an MCP server
+that runs in a separate process.
+This clear decoupling allows for easy adoption and reuse of
+any of the significant collections of MCP servers listed above.
+
+To make it easy for LangChain to take advantage of such a vast resource base,
+this package offers quick and seamless access from LangChain to MCP servers.
+
 It contains a utility function `convertMcpToLangchainTools()`.  
 This async function handles parallel initialization of specified multiple MCP servers
 and converts their available tools into an array of LangChain-compatible tools.
