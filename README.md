@@ -12,15 +12,18 @@ such as web search and database access.
 Thanks to its open-source nature, MCP has gained significant traction in the developer community,
 with over 400 MCP servers already developed and shared:
 
-- [Smithery: MCP Server Registry](https://smithery.ai/)
 - [Glama’s list of Open-Source MCP servers](https://glama.ai/mcp/servers)
+- [Smithery: MCP Server Registry](https://smithery.ai/)
+- [awesome-mcp-servers](https://github.com/hideya/awesome-mcp-servers#Server-Implementations)
+- [MCP Get Started/Example Servers](https://modelcontextprotocol.io/examples)
 
-In the MCP framework, external features are encapsulated in an MCP server
-that runs in a separate process.
-This clear decoupling allows for easy adoption and reuse of
-any of the significant collections of MCP servers listed above.
+In the MCP framework, external features are encapsulated in an MCP server,
+which typically runs in a separate process and communicates
+via `stdio` using the open standard protocol.
+This clean decoupling makes it easy to adopt and reuse any of
+the significant collections of MCP servers listed above.
 
-To make it easy for LangChain to take advantage of such a vast resource base,
+To make it easy for LangChain users to take advantage of such a vast resource base,
 this package offers quick and seamless access from LangChain to MCP servers.
 
 It contains a utility function `convertMcpToLangchainTools()`.  
