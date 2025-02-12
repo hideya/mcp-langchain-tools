@@ -7,7 +7,7 @@ server tools with LangChain / TypeScript.
 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/),
 an open source technology
 [announced by Anthropic](https://www.anthropic.com/news/model-context-protocol),
-dramatically expands generative AI’s scope
+dramatically expands LLM’s scope
 by enabling external tool and resource integration, including
 Google Drive, Slack, Notion, Spotify, Docker, PostgreSQL, and more…
 

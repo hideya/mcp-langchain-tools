@@ -201,17 +201,22 @@ async function convertSingleMcpToLangchainTools(
             CallToolResultSchema
           );
 
-          const resultStringfied = JSON.stringify(result?.content)
-          const roughLength = resultStringfied.length;
-          logger.info(`MCP tool "${serverName}"/"${tool.name}" received result (length: ${roughLength})`);
-          logger.debug('result:', result?.content);
-          return resultStringfied;
+          // Handles null/undefined cases gracefully
+          if (!result?.content) {
+            logger.info(`MCP tool "${serverName}"/"${tool.name}" received null/undefined result`);
+            return '';
+          }
 
-          // const filteredResult = result?.content
-          //   .filter(content => content.type === 'text')
-          //   .map(content => content.text)
-          //   .join('\n\n');
-          // return filteredResult;
+          // For multiple content pieces or mixed types
+          const textContent = result.content
+            .filter(content => content.type === 'text')
+            .map(content => content.text)
+            .join('\n\n');
+
+          logger.info(`MCP tool "${serverName}"/"${tool.name}" received result (length: ${textContent.length})`);
+
+          // If no text content, return a clear message describing the situation
+          return textContent || 'No text content available in response';
         },
       })
     ));
