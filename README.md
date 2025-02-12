@@ -75,7 +75,7 @@ The returned tools can be used with LangChain, e.g.:
 
 ```ts
 // import { ChatAnthropic } from '@langchain/anthropic';
-const llm = new ChatAnthropic({ model: 'claude-3-5-haiku-latest' });
+const llm = new ChatAnthropic({ model: 'claude-3-5-sonnet-latest' });
 
 // import { createReactAgent } from '@langchain/langgraph/prebuilt';
 const agent = createReactAgent({
